@@ -1,5 +1,2 @@
-.idea/*
+
 .venv/*
-alembic.ini
-ecommerce.db
-requirements.txt
