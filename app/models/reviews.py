@@ -1,5 +1,5 @@
-from decimal import Decimal
-from sqlalchemy import String, Boolean, Integer, Numeric, ForeignKey, text, Text, DateTime
+
+from sqlalchemy import Boolean, Integer, ForeignKey, Text, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 
@@ -19,6 +19,3 @@ class Review(Base):
 
     user = relationship("User", back_populates="reviews")
     product = relationship("Product", back_populates="reviews")
-
-
-
