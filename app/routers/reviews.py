@@ -80,7 +80,7 @@ async def create_post(
     if review_result.first():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already have feedback")
 
-    db_review = ReviewModel(**review.model_dump(), buyer_id=current_user.id)
+    db_review = ReviewModel(**review.model_dump(), user_id=current_user.id)
     db.add(db_review)
 
     # Пересчет рейтинга
