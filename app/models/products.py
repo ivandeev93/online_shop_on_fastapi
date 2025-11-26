@@ -34,9 +34,10 @@ class Product(Base):
     )
 
 
-category: Mapped["Category"] = relationship("Category", back_populates="products")
-seller = relationship("User", back_populates="products")
+    category: Mapped["Category"] = relationship("Category", back_populates="products")
+    seller = relationship("User", back_populates="products")
+    reviews = relationship("Review", back_populates="product")
 
-__table_args__ = (
-    Index("ix_products_tsv_gin", "tsv", postgresql_using="gin"),
-)
+    __table_args__ = (
+        Index("ix_products_tsv_gin", "tsv", postgresql_using="gin"),
+    )
