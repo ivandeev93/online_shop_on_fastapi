@@ -1,5 +1,6 @@
 from decimal import Decimal
-from sqlalchemy import String, Boolean, Integer, Numeric, ForeignKey, text
+from sqlalchemy import String, Boolean, Integer, Numeric, ForeignKey, text, Computed, Index
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -19,6 +20,23 @@ class Product(Base):
     seller_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     rating: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=Decimal("0.00"), server_default=text('0.00'))
 
-    category: Mapped["Category"] = relationship(back_populates="products")
-    seller = relationship("User", back_populates="products")
-    reviews = relationship("Review", back_populates="product")
+    tsv: Mapped[TSVECTOR] = mapped_column(
+        TSVECTOR,
+        Computed(
+            """
+            setweight(to_tsvector('english', coalesce(name, '')), 'A')
+            || 
+            setweight(to_tsvector('english', coalesce(description, '')), 'B')
+            """,
+            persisted=True,
+        ),
+        nullable=False,
+    )
+
+
+category: Mapped["Category"] = relationship("Category", back_populates="products")
+seller = relationship("User", back_populates="products")
+
+__table_args__ = (
+    Index("ix_products_tsv_gin", "tsv", postgresql_using="gin"),
+)
