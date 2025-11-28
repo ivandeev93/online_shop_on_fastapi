@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.routers import cart, categories, orders, products, users, reviews
+from fastapi.staticfiles import StaticFiles
 
 
 # Создаём приложение FastAPI
@@ -15,6 +16,10 @@ app.include_router(users.router)
 app.include_router(reviews.router)
 app.include_router(cart.router)
 app.include_router(orders.router)
+
+# Для обслуживания медиа файлов
+app.mount("/media", StaticFiles(directory="media"), name="media")
+#Теперь любой файл из media/products/ будет доступен по URL: http://localhost:8000/media/products/abc123.jpg
 
 
 # Корневой эндпоинт для проверки
